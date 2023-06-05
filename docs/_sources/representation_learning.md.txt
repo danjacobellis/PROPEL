@@ -116,17 +116,16 @@ An newer technique that is rapidly gaining traction is the concept of implicit n
 1. [Introduction to Large Language Models](https://stanford-cs324.github.io/winter2022/lectures/introduction/)
 2. [Diffusion Explainer](https://poloclub.github.io/diffusion-explainer/)
 3. [Probabilistic Machine Learning: Advanced Topics](https://probml.github.io/pml-book/book2.html)
-4. [End-to-end Optimized Image Compression](https://www.cns.nyu.edu/~lcv/iclr2017/) - Balle17
-5. [Reverse Engineering Self-Supervised Learning](https://arxiv.org/abs/2305.15614) - BenShaul23
-6. [High-Fidelity Image Compression with Score-based Generative Models](https://arxiv.org/abs/2305.18231) - Hoogeboom23
-7. [To Compress or Not to Compress- Self-Supervised Learning and Information Theory: A Review](https://arxiv.org/abs/2304.09355) - ShwartzZiv23
-8. [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238) - Horton23
-9. [Advances in Foundation Models](https://stanford-cs324.github.io/winter2023/) - Re23
-10. [On the Opportunities and Risks of Foundation Models](https://crfm.stanford.edu/report.html) - Bommasani21
-11. [QLoRA: Efficient Finetuning of Quantized LLMs](https://github.com/artidoro/qlora) - Dettmers23
-12. [SeiT: Storage-efficient Vision Training](https://github.com/naver-ai/seit) - Park23
-13. [Probabilistic Machine Learning: Advanced Topics](https://probml.github.io/pml-book/book2.html) - Murphy23
-14. [What is a Vector Database?](https://www.pinecone.io/learn/vector-database/) - SchwaberCohen23
-15. [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264) - Muennighoff23
-16. [Diffusion Explainer](https://poloclub.github.io/diffusion-explainer/) - Lee23
-
+4. [End-to-end Optimized Image Compression](https://www.cns.nyu.edu/~lcv/iclr2017/)
+5. [Reverse Engineering Self-Supervised Learning](https://arxiv.org/abs/2305.15614)
+6. [High-Fidelity Image Compression with Score-based Generative Models](https://arxiv.org/abs/2305.18231)
+7. [To Compress or Not to Compress- Self-Supervised Learning and Information Theory: A Review](https://arxiv.org/abs/2304.09355)
+8. [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238)
+9. [Advances in Foundation Models](https://stanford-cs324.github.io/winter2023/)
+10. [On the Opportunities and Risks of Foundation Models](https://crfm.stanford.edu/report.html)
+11. [QLoRA: Efficient Finetuning of Quantized LLMs](https://github.com/artidoro/qlora)
+12. [SeiT: Storage-efficient Vision Training](https://github.com/naver-ai/seit)
+13. [Probabilistic Machine Learning: Advanced Topics](https://probml.github.io/pml-book/book2.html)
+14. [What is a Vector Database?](https://www.pinecone.io/learn/vector-database/)
+15. [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264)
+16. [Diffusion Explainer](https://poloclub.github.io/diffusion-explainer/)
