@@ -1,0 +1,278 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Representation Learning &#8212; PROPEL</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/theme.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-bootstrap.5fd3999ee7762ccc51105388f4a9d115.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-main.c949a650a448cc0ae9fd3441c0e17fb0.css" />
+    <link rel="stylesheet" type="text/css" href="_static/panels-variables.06eb56fa6e07937060861dad626602ad.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Index" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section class="tex2jax_ignore mathjax_ignore" id="representation-learning">
+<h1>Representation Learning<a class="headerlink" href="#representation-learning" title="Permalink to this heading">¶</a></h1>
+<section id="what-is-representation-learning">
+<h2>What is representation learning?<a class="headerlink" href="#what-is-representation-learning" title="Permalink to this heading">¶</a></h2>
+<p>In short, it is the technology at the core of the most popular and impactful foundation models like <a class="reference external" href="https://stanford-cs324.github.io/winter2022/lectures/introduction/">GPT</a> and and <a class="reference external" href="https://poloclub.github.io/diffusion-explainer/">Stable Diffusion</a></p>
+<p>In <a class="reference external" href="https://probml.github.io/pml-book/book2.html">Kevin Murphy’s biblical treatise on machine learning</a>, Poole and Kornblinth offer this definition:</p>
+<p><em>“Representation learning is a paradigm for training machine learning models to transform raw inputs into a form that makes it easier to solve new tasks. Unlike supervised learning, where the task is known at training time, representation learning often assumes that we do not know what task we wish to solve ahead of time.”</em></p>
+<p>In this article, we will explore techniques that have recently been developed for representation learning. But first, we need to address an often overlooked aspect. What do we mean by “raw inputs?”</p>
+</section>
+<section id="signal-measurement">
+<h2>Signal measurement<a class="headerlink" href="#signal-measurement" title="Permalink to this heading">¶</a></h2>
+<p>We digitize the natural world by <a class="reference external" href="https://en.wikipedia.org/wiki/Sampling_(signal_processing)">sampling</a> and <a class="reference external" href="https://en.wikipedia.org/wiki/Quantization_(signal_processing)">quantization</a> of continuous signals. A large branch of machine learning research focuses on signals that are measured on uniform, rectangular grids. For example:</p>
+<ul class="simple">
+<li><p>Audio: A continuous-time, analog acoustic pressure signal is converted to discrete-time and digital signal by a  <a class="reference external" href="https://en.wikipedia.org/wiki/Delta-sigma_modulation">delta-sigma-modulation</a> analog-to-digital converter (ADC).</p></li>
+<li><p>Images and video: Light intensity is quantized by an <a class="reference external" href="https://en.wikipedia.org/wiki/Image_sensor">image sensor</a> and light spectrum is quantized by a <a class="reference external" href="https://en.wikipedia.org/wiki/Bayer_filter">Bayer filter</a>. Light is spatially sampled into a rectangular grid of pixels.</p></li>
+</ul>
+<p>The use of uniform, rectangular grids, vastly simplifies machine learning tasks. In particular, it allows us to leverage the extremely powerful <strong>convolution operation.</strong></p>
+<p>However, many signal types are not amenable to this regular grid structure. For example:</p>
+<ul class="simple">
+<li><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Medical_ultrasound#Types">B-mode medical ultrasound</a> measures high frequency acoustic signals using a curvilinear array consisting of 100s of transducers. Unlike conventional audio, measurement and storage of the raw audio signal is impractical. Instead, mixed analog-digital signal processing is used to produce a digital representation of the soft tissue density as a function of depth and angle, which the operator can examine in real-time.</p></li>
+<li><p>a <a class="reference external" href="https://en.wikipedia.org/wiki/3D_scanning">3D laser scanner</a> measures the time-of-flight of optical pulses swept over a range of angles. In the case of handheld scanners, the received optical pulses are calibrated with respect to the motion of the device. The end result is a point-cloud representation of data which does not naturally conform to any type of grid.</p></li>
+</ul>
+</section>
+<section id="rate-distortion-theory-and-lossy-compression">
+<h2>Rate-distortion theory and lossy compression<a class="headerlink" href="#rate-distortion-theory-and-lossy-compression" title="Permalink to this heading">¶</a></h2>
+<p>Because of the high density and precision of our signal measurements, storage and transmission of the raw signal is rarely practical. For example, a standard 1080p video stream is roughly three billion bits <em>per second</em> (2.98 Gbps) before compression, roughly ten times the typical capacity of a 5G cellular network (100-400 Mpbs).</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Lossy_compression">Lossy compression</a> techniques aim to reduce the data’s size without excessively compromising its quality. <a class="reference external" href="https://en.wikipedia.org/wiki/Rate%E2%80%93distortion_theory">Rate-Distortion Theory</a>, a branch of <a class="reference external" href="https://en.wikipedia.org/wiki/Information_theory">Information Theory</a> provides a theoretical framework for understanding the trade-off between the amount of data (rate) needed to represent a source and the loss of quality (distortion) of the representation.</p>
+<p>While the bit rate is well defined, “distortion” is much trickier. Simple distortion metrics like mean squared error are only loosely correlated to the quality metrics that we actually care about. In audio and video signal processing, a variety of perceptual quality metrics were co-developed with lossy compression algorithms which are now understood to have extremely deep connections with natural signal statistics.</p>
+</section>
+<section id="the-holy-grail-of-representation-learning">
+<h2>The holy grail of representation learning<a class="headerlink" href="#the-holy-grail-of-representation-learning" title="Permalink to this heading">¶</a></h2>
+<p>Before discussing specific techniques for representation learning, let us enumerate a wish list of design goals that will be helpful to understand their tradeoffs</p>
+<p>An ideal representation learning algorithm would produce an encoder and decoder pair (codec) that:</p>
+<ol class="arabic simple">
+<li><p>Is computationally efficient</p></li>
+<li><p>Allows graceful control between rate and distortion</p></li>
+<li><p>Uses a training process which is scalable to the size of a foundation model</p></li>
+<li><p>Is applicable to a variety of modalities, and is not limited to grid-structured inputs</p></li>
+<li><p>Simplifies or enables downstream tasks:</p>
+<ul class="simple">
+<li><p>Analysis (e.g. detection, classification, segmentation)</p></li>
+<li><p>Synthesis (e.g. inpainting, super-resolution, deblurring)</p></li>
+<li><p>Many others, including</p>
+<ul>
+<li><p>Search and retrieval</p></li>
+<li><p>Novel view synthesis</p></li>
+<li><p>Semantic editing</p></li>
+<li><p>Source separation</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>For now, different representations each have their own uses for certain tasks. We don’t need a representation to be perfect at everything for it to be useful, but these are the goals we should keep in mind.</p>
+</section>
+<section id="comparison-of-techniques">
+<h2>Comparison of techniques<a class="headerlink" href="#comparison-of-techniques" title="Permalink to this heading">¶</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>Efficiency</p></th>
+<th class="head"><p>R-D control</p></th>
+<th class="head"><p>Analysis</p></th>
+<th class="head"><p>Synthesis</p></th>
+<th class="head"><p>Search</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Conventional lossy codecs</p></td>
+<td><p>✅</p></td>
+<td><p>✅</p></td>
+<td><p>❌</p></td>
+<td><p>❌</p></td>
+<td><p>❌</p></td>
+</tr>
+<tr class="row-odd"><td><p>Classifier decapitation</p></td>
+<td><p>✅</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+<td><p>❌</p></td>
+<td><p>✅</p></td>
+</tr>
+<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(\nabla_x\)</span> embedding</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>Autoencoders</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p>INRs/functa</p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="conventional-codecs">
+<h2>Conventional codecs<a class="headerlink" href="#conventional-codecs" title="Permalink to this heading">¶</a></h2>
+<p>Codecs such as MPEG and JPEG were standardized in the 1990s and are still widely used for audio, images, and video. Generally, these codecs adhere to the paradigm of <a class="reference external" href="https://en.wikipedia.org/wiki/Transform_coding">transform coding</a>, which involves three main steps:</p>
+<ol class="arabic simple">
+<li><p><strong>A time-frequency or space-frequency sub-band decomposition.</strong> For example, JPEG uses the <a class="reference external" href="https://en.wikipedia.org/wiki/Discrete_cosine_transform#Multidimensional_DCTs">two-dimensional type-II DCT</a> applied to 8x8 blocks. In MPEG layer III, an audio signal is efficiently divided into 32 frequency bands using a <a class="reference external" href="https://en.wikipedia.org/wiki/Polyphase_quadrature_filter">polyphase filterbank</a>, then each sub-band is further decomposed using the <a class="reference external" href="https://en.wikipedia.org/wiki/Modified_discrete_cosine_transform">modified DCT</a>. The transform has the effect of <a class="reference external" href="https://en.wikipedia.org/wiki/Decorrelation">decorrelating</a> signal components to eliminate redundancy.</p></li>
+<li><p><strong>Perceptual quantization.</strong> While data from an audio ADC or image sensor typically have a precision in the range of 4-16 bits, the sub-band decomposition may be carried out with higher precision (often 32-bit floating point) and then quantized to lower precision. a perceptual model is used to allocated bits to each sub-band. The <a class="reference external" href="https://en.wikipedia.org/wiki/JPEG#Quantization">quantization matrix in JPEG</a>, for example, results in between 2-8 bits for each DCT coefficient. Most of the complexity of standard codecs is in the sub-band bit allocation procedure.</p></li>
+<li><p><strong>Entropy coding.</strong> The lossy compression performed in steps (1) and (2) is combined with lossless compression to achieve very high compression ratios. Simple prefix codes such as the <a class="reference external" href="https://en.wikipedia.org/wiki/Huffman_coding">Huffman code</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Golomb_coding">Golomb code</a>, or <a class="reference external" href="https://en.wikipedia.org/wiki/Run-length_encoding">run-length encoding</a> are usually preferred to keep the decoding cheap.</p></li>
+</ol>
+</section>
+<section id="classifier-decapitation">
+<h2>Classifier decapitation<a class="headerlink" href="#classifier-decapitation" title="Permalink to this heading">¶</a></h2>
+<p>This is a technique in which the final layer of a pre-trained classifier is removed, and the semifinal layer is used as an representation. When the classifier has been trained on a large and diverse dataset, this is an effective method to apply transfer learning with a different dataset or a different set of classes by training a sigle fully connected layer. This approach is also the basis for FID and FAD, the standard evaluation metrics for generative models of images and audio respectively.</p>
+</section>
+<section id="vector-embedding">
+<h2>Vector embedding<a class="headerlink" href="#vector-embedding" title="Permalink to this heading">¶</a></h2>
+<p>The concept of a vector embedding (which we will henceforth refer to as “<span class="math notranslate nohighlight">\(\nabla _x\)</span> embedding” for reasons that will soon become clear) is best explained in the context of natural language processing.</p>
+<section id="example-alphabetic-character-embedding">
+<h3>Example: alphabetic character embedding<a class="headerlink" href="#example-alphabetic-character-embedding" title="Permalink to this heading">¶</a></h3>
+<p>Consider an input character sequence from a discrete alphabet (for example the 128 valid ASCII characters).</p>
+<p>The standard training procedure for neural networks consists of a high precision (16 or 32 bit floating point) representation at the input neurons and some form of divisive normalization. This works amazingly well because of the ability of the floating point number system to efficiently represent real numbers.</p>
+<p>When training a neural network, how should we represent our 7-bit characters which represent a category rather than a real number? One approach is to simply one-hot encode. This works, but leads to unreasonable memory requirements and dramatically increases the number of network parameters. The “<span class="math notranslate nohighlight">\(\nabla _x\)</span> embedding” technique instead consists of the following:</p>
+<ul class="simple">
+<li><p>Create a lookup table that maps the each of the 128 possible input tokens to a unique vector in an <span class="math notranslate nohighlight">\(M\)</span> dimensional space. We will call this <span class="math notranslate nohighlight">\(128 \times M\)</span> matrix the “embedding matrix” and we will initialize it with i.i.d. samples from a standard Gaussian.</p></li>
+<li><p>When training, map the input tokens to vectors according to the embedding matrix/lookup table. Use the result of this mapping as the input to the network instead of the categorical variables.</p></li>
+<li><p>Train the neural network as usual. That is, compute the gradient of the loss function with respect to the neural network parameters, <span class="math notranslate nohighlight">\(\nabla_\theta L\)</span>. Moving in the opposite direction of this gradient will adjust the parameters to minimize the loss.</p></li>
+<li><p>In addition, compute the gradient of the loss function with respect to the <strong>input</strong>, <span class="math notranslate nohighlight">\(\nabla_x L\)</span>. Since the input is simply the entries of the embedding table, moving in the opposite direction will <strong>learn a representation</strong> that minimizes the loss.</p></li>
+</ul>
+</section>
+</section>
+<section id="autoencoders">
+<h2>Autoencoders<a class="headerlink" href="#autoencoders" title="Permalink to this heading">¶</a></h2>
+<p>A plethora of architectures for autoencoders have been proposed. One commonality among them is a <strong>reconstruction objective</strong>: The target output should be similar to the input, meaning that the loss function includes a <strong>distortion metric</strong>. The distortion metric can be chosen for mathematical convenience (e.g. squared error), but for an autoencoder to achieve our design goals it is preferable to choose an application specific metric.</p>
+<p>For example, one of the key ingredients enabling <a class="reference external" href="https://www.cns.nyu.edu/~lcv/iclr2017/">neural image compression</a> is the use <a class="reference external" href="https://en.wikipedia.org/wiki/Structural_similarity">structural similarity (SSIM)</a> as the distortion metric. In fact, recent research has <a class="reference external" href="https://arxiv.org/abs/2106.04427">established an important link between perceptual quality metrics like SSIM and efficient statistical learning</a>.</p>
+<p>Some notable flavors of autoencoders include:</p>
+<ul class="simple">
+<li><p>The <strong>Variational autoencoder (VAE),</strong> which adds an additional loss term that forces the learned representation towards a specific probability distribution (typically Gaussian). Recently, foundation models for <a class="reference external" href="https://audioldm.github.io/">audio</a>, <a class="reference external" href="https://en.wikipedia.org/wiki/Stable_Diffusion">images</a>, and <a class="reference external" href="https://research.nvidia.com/labs/toronto-ai/VideoLDM/">video</a> have utilized this basic VAE form to improve the efficiency of diffusion models.</p></li>
+<li><p><strong>Vector-quantized VAE (VQ-VAE)</strong>. In addition to the reconstruction loss, a codebook loss similar to the standard vector quantization/k-means objective is added. Neural codecs including <a class="reference external" href="https://github.com/wesbz/SoundStream">Google Soundstream</a> and <a class="reference external" href="https://github.com/facebookresearch/encodec">Meta’s EnCodec</a> have recently been standardized and use variants of the VQ-VAE to achieve extremely high compression ratios. Recent audio synthesis models for for <a class="reference external" href="https://vall-e.io/">speech</a> and <a class="reference external" href="https://google-research.github.io/seanet/musiclm/examples/">music</a> use representations learned from a VQ-VAE.</p></li>
+<li><p>The <strong>denoising autoencoder</strong> and <strong>masked autoencoder</strong> leave the target the same, but only provide partial access to the input. This paradigm has been extremely successful in <a class="reference external" href="https://en.wikipedia.org/wiki/BERT_(language_model)">modeling language</a>, <a class="reference external" href="https://arxiv.org/abs/2203.16691">audio</a>, and <a class="reference external" href="https://arxiv.org/abs/2111.06377">images</a>, and is now commonly referred to as “self-supervised” learning</p></li>
+<li><p>The <strong>rate-distortion autoencoder</strong>, aka “<a class="reference external" href="https://ieeexplore.ieee.org/abstract/document/9242247/">nonlinear transform coding</a>” directly penalizes the entropy of the latent representation. When originally proposed for image compression, Balle et al established an important theoretical link between this technique and the VAE.</p></li>
+</ul>
+</section>
+<section id="implicit-neural-representations">
+<h2>Implicit neural representations<a class="headerlink" href="#implicit-neural-representations" title="Permalink to this heading">¶</a></h2>
+<p>An newer technique that is rapidly gaining traction is the concept of implicit neural representations (INRs), now commonly referred to as <em>functa</em>. <a class="reference external" href="https://ora.ox.ac.uk/objects/uuid:c573637c-bf05-4e8a-a8e4-d499eec77446">Neural Networks as Data</a>* provides a comprehensive overview of INRs, and offers an excellent description:</p>
+<p><em>“Data is often represented by arrays, such as a 2D grid of pixels for images. However, the underlying signal represented by these arrays is often continuous, such as the scene depicted in an image. A powerful continuous alternative to discrete arrays is then to represent such signals with an implicit neural representation (INR), a neural network trained to output the appropriate signal value for any input spatial location. An image for example, can be parameterized by a neural network mapping pixel locations to RGB values.”</em></p>
+<p><a class="reference external" href="https://www.notion.so/101383ffaecd450a9b98b26c01d3bcc3?pvs=21">References</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PROPEL</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Representation Learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-is-representation-learning">What is representation learning?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#signal-measurement">Signal measurement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rate-distortion-theory-and-lossy-compression">Rate-distortion theory and lossy compression</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-holy-grail-of-representation-learning">The holy grail of representation learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#comparison-of-techniques">Comparison of techniques</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conventional-codecs">Conventional codecs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#classifier-decapitation">Classifier decapitation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vector-embedding">Vector embedding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#autoencoders">Autoencoders</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#implicit-neural-representations">Implicit neural representations</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Index</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/representation_learning.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
