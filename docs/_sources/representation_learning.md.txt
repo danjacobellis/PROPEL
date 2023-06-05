@@ -110,5 +110,3 @@ Some notable flavors of autoencoders include:
 An newer technique that is rapidly gaining traction is the concept of implicit neural representations (INRs), now commonly referred to as *functa*. [Neural Networks as Data](https://ora.ox.ac.uk/objects/uuid:c573637c-bf05-4e8a-a8e4-d499eec77446)* provides a comprehensive overview of INRs, and offers an excellent description:
 
 *"Data is often represented by arrays, such as a 2D grid of pixels for images. However, the underlying signal represented by these arrays is often continuous, such as the scene depicted in an image. A powerful continuous alternative to discrete arrays is then to represent such signals with an implicit neural representation (INR), a neural network trained to output the appropriate signal value for any input spatial location. An image for example, can be parameterized by a neural network mapping pixel locations to RGB values."*
-
-[References](https://www.notion.so/101383ffaecd450a9b98b26c01d3bcc3?pvs=21)
