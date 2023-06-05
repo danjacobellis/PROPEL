@@ -110,3 +110,38 @@ Some notable flavors of autoencoders include:
 An newer technique that is rapidly gaining traction is the concept of implicit neural representations (INRs), now commonly referred to as *functa*. [Neural Networks as Data](https://ora.ox.ac.uk/objects/uuid:c573637c-bf05-4e8a-a8e4-d499eec77446)* provides a comprehensive overview of INRs, and offers an excellent description:
 
 *"Data is often represented by arrays, such as a 2D grid of pixels for images. However, the underlying signal represented by these arrays is often continuous, such as the scene depicted in an image. A powerful continuous alternative to discrete arrays is then to represent such signals with an implicit neural representation (INR), a neural network trained to output the appropriate signal value for any input spatial location. An image for example, can be parameterized by a neural network mapping pixel locations to RGB values."*
+
+## References
+
+1. [GPT](https://stanford-cs324.github.io/winter2022/lectures/introduction/)
+2. [Stable Diffusion](https://poloclub.github.io/diffusion-explainer/)
+3. [Kevin Murphy’s biblical treatise on machine learning](https://probml.github.io/pml-book/book2.html)
+4. [sampling](https://en.wikipedia.org/wiki/Sampling_(signal_processing))
+5. [quantization](https://en.wikipedia.org/wiki/Quantization_(signal_processing))
+6. [delta-sigma-modulation](https://en.wikipedia.org/wiki/Delta-sigma_modulation)
+7. [image sensor](https://en.wikipedia.org/wiki/Image_sensor)
+8. [Bayer filter](https://en.wikipedia.org/wiki/Bayer_filter)
+9. [B-mode medical ultrasound](https://en.wikipedia.org/wiki/Medical_ultrasound#Types)
+10. [3D laser scanner](https://en.wikipedia.org/wiki/3D_scanning)
+11. [Lossy compression](https://en.wikipedia.org/wiki/Lossy_compression)
+12. [Rate-Distortion Theory](https://en.wikipedia.org/wiki/Rate%E2%80%93distortion_theory)
+13. [Information Theory](https://en.wikipedia.org/wiki/Information_theory)
+14. [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding)
+15. [Golomb code](https://en.wikipedia.org/wiki/Golomb_coding)
+16. [run-length encoding](https://en.wikipedia.org/wiki/Run-length_encoding)
+17. [FID](https://poloclub.github.io/diffusion-explainer/) (Fréchet Inception Distance)
+18. [FAD](https://poloclub.github.io/diffusion-explainer/) (Fréchet Audio Distance)
+19. [neural image compression](https://www.cns.nyu.edu/~lcv/iclr2017/)
+20. [structural similarity (SSIM)](https://en.wikipedia.org/wiki/Structural_similarity)
+21. [neural audio compression](https://audioldm.github.io/)
+22. [neural video compression](https://research.nvidia.com/labs/toronto-ai/VideoLDM/)
+23. [Variational autoencoder (VAE)](https://en.wikipedia.org/wiki/Autoencoder#Variational_autoencoder_(VAE))
+24. [Google Soundstream](https://github.com/wesbz/SoundStream)
+25. [Meta's EnCodec](https://github.com/facebookresearch/encodec)
+26. [speech synthesis](https://vall-e.io/)
+27. [music synthesis](https://google-research.github.io/seanet/musiclm/examples/)
+28. [denoising autoencoder](https://en.wikipedia.org/wiki/Autoencoder#Denoising_autoencoder)
+29. [masked autoencoder](https://en.wikipedia.org/wiki/Autoencoder#Applications)
+30. [BERT](https://en.wikipedia.org/wiki/BERT_(language_model))
+31. [INRs](https://ora.ox.ac.uk/objects/uuid:c573637c-bf05-4e8a-a8e4-d499eec77446)
+
