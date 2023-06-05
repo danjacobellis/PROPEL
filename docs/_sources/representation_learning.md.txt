@@ -113,35 +113,20 @@ An newer technique that is rapidly gaining traction is the concept of implicit n
 
 ## References
 
-1. [GPT](https://stanford-cs324.github.io/winter2022/lectures/introduction/)
-2. [Stable Diffusion](https://poloclub.github.io/diffusion-explainer/)
-3. [Kevin Murphy’s biblical treatise on machine learning](https://probml.github.io/pml-book/book2.html)
-4. [sampling](https://en.wikipedia.org/wiki/Sampling_(signal_processing))
-5. [quantization](https://en.wikipedia.org/wiki/Quantization_(signal_processing))
-6. [delta-sigma-modulation](https://en.wikipedia.org/wiki/Delta-sigma_modulation)
-7. [image sensor](https://en.wikipedia.org/wiki/Image_sensor)
-8. [Bayer filter](https://en.wikipedia.org/wiki/Bayer_filter)
-9. [B-mode medical ultrasound](https://en.wikipedia.org/wiki/Medical_ultrasound#Types)
-10. [3D laser scanner](https://en.wikipedia.org/wiki/3D_scanning)
-11. [Lossy compression](https://en.wikipedia.org/wiki/Lossy_compression)
-12. [Rate-Distortion Theory](https://en.wikipedia.org/wiki/Rate%E2%80%93distortion_theory)
-13. [Information Theory](https://en.wikipedia.org/wiki/Information_theory)
-14. [Huffman code](https://en.wikipedia.org/wiki/Huffman_coding)
-15. [Golomb code](https://en.wikipedia.org/wiki/Golomb_coding)
-16. [run-length encoding](https://en.wikipedia.org/wiki/Run-length_encoding)
-17. [FID](https://poloclub.github.io/diffusion-explainer/) (Fréchet Inception Distance)
-18. [FAD](https://poloclub.github.io/diffusion-explainer/) (Fréchet Audio Distance)
-19. [neural image compression](https://www.cns.nyu.edu/~lcv/iclr2017/)
-20. [structural similarity (SSIM)](https://en.wikipedia.org/wiki/Structural_similarity)
-21. [neural audio compression](https://audioldm.github.io/)
-22. [neural video compression](https://research.nvidia.com/labs/toronto-ai/VideoLDM/)
-23. [Variational autoencoder (VAE)](https://en.wikipedia.org/wiki/Autoencoder#Variational_autoencoder_(VAE))
-24. [Google Soundstream](https://github.com/wesbz/SoundStream)
-25. [Meta's EnCodec](https://github.com/facebookresearch/encodec)
-26. [speech synthesis](https://vall-e.io/)
-27. [music synthesis](https://google-research.github.io/seanet/musiclm/examples/)
-28. [denoising autoencoder](https://en.wikipedia.org/wiki/Autoencoder#Denoising_autoencoder)
-29. [masked autoencoder](https://en.wikipedia.org/wiki/Autoencoder#Applications)
-30. [BERT](https://en.wikipedia.org/wiki/BERT_(language_model))
-31. [INRs](https://ora.ox.ac.uk/objects/uuid:c573637c-bf05-4e8a-a8e4-d499eec77446)
+1. [Introduction to Large Language Models](https://stanford-cs324.github.io/winter2022/lectures/introduction/)
+2. [Diffusion Explainer](https://poloclub.github.io/diffusion-explainer/)
+3. [Probabilistic Machine Learning: Advanced Topics](https://probml.github.io/pml-book/book2.html)
+4. [End-to-end Optimized Image Compression](https://www.cns.nyu.edu/~lcv/iclr2017/) - Balle17
+5. [Reverse Engineering Self-Supervised Learning](https://arxiv.org/abs/2305.15614) - BenShaul23
+6. [High-Fidelity Image Compression with Score-based Generative Models](https://arxiv.org/abs/2305.18231) - Hoogeboom23
+7. [To Compress or Not to Compress- Self-Supervised Learning and Information Theory: A Review](https://arxiv.org/abs/2304.09355) - ShwartzZiv23
+8. [Bytes Are All You Need: Transformers Operating Directly On File Bytes](https://arxiv.org/abs/2306.00238) - Horton23
+9. [Advances in Foundation Models](https://stanford-cs324.github.io/winter2023/) - Re23
+10. [On the Opportunities and Risks of Foundation Models](https://crfm.stanford.edu/report.html) - Bommasani21
+11. [QLoRA: Efficient Finetuning of Quantized LLMs](https://github.com/artidoro/qlora) - Dettmers23
+12. [SeiT: Storage-efficient Vision Training](https://github.com/naver-ai/seit) - Park23
+13. [Probabilistic Machine Learning: Advanced Topics](https://probml.github.io/pml-book/book2.html) - Murphy23
+14. [What is a Vector Database?](https://www.pinecone.io/learn/vector-database/) - SchwaberCohen23
+15. [Scaling Data-Constrained Language Models](https://arxiv.org/abs/2305.16264) - Muennighoff23
+16. [Diffusion Explainer](https://poloclub.github.io/diffusion-explainer/) - Lee23
 
